@@ -1,0 +1,11 @@
+{
+  "name": "Atlas",
+  "author": "Slatyo",
+  "description": "Server-side shared map exploration and pins for all players. Explore together, share pins automatically - one map for all!",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/Slatyo/Valheim-Atlas",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2333",
+    "ValheimModding-Jotunn-2.26.1"
+  ]
+}
