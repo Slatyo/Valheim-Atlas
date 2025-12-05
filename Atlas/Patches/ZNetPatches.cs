@@ -108,13 +108,30 @@ namespace Atlas.Patches
 
         private static System.Collections.IEnumerator RequestSyncDelayed()
         {
-            // Wait a short time for everything to initialize
+            // Wait for network to be fully ready
             yield return new UnityEngine.WaitForSeconds(2f);
 
-            if (Plugin.IsClient() && !Plugin.NetworkManager.IsReceivingSync)
+            // Verify we're still a client and everything is ready
+            if (!Plugin.IsClient())
+                yield break;
+
+            if (Plugin.NetworkManager == null)
+                yield break;
+
+            if (Plugin.NetworkManager.IsReceivingSync)
+                yield break;
+
+            // Make sure ZRoutedRpc is ready
+            if (ZRoutedRpc.instance == null)
+            {
+                Plugin.Log.LogWarning("ZRoutedRpc not ready, retrying sync request in 2s...");
+                yield return new UnityEngine.WaitForSeconds(2f);
+            }
+
+            if (ZRoutedRpc.instance != null && Plugin.IsClient())
             {
                 Plugin.Log.LogInfo("Player spawned, requesting map sync...");
-                Plugin.NetworkManager?.RequestFullSync();
+                Plugin.NetworkManager.RequestFullSync();
             }
         }
     }

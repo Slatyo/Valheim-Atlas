@@ -21,7 +21,9 @@ namespace Atlas.Managers
         private float _lastSyncTime;
 
         // Flag to prevent feedback loops when applying remote data
-        public bool IsApplyingRemote { get; private set; }
+        // Uses a counter instead of bool to handle nested/concurrent calls
+        private int _applyingRemoteCount;
+        public bool IsApplyingRemote => _applyingRemoteCount > 0;
 
         // Track if we've done initial sync
         private bool _initialSyncComplete;
@@ -187,7 +189,7 @@ namespace Atlas.Managers
         {
             if (chunks == null || chunks.Count == 0) return;
 
-            IsApplyingRemote = true;
+            _applyingRemoteCount++;
 
             try
             {
@@ -212,7 +214,7 @@ namespace Atlas.Managers
             }
             finally
             {
-                IsApplyingRemote = false;
+                _applyingRemoteCount--;
             }
         }
 
@@ -378,6 +380,7 @@ namespace Atlas.Managers
             _chunks.Clear();
             _dirtyChunks.Clear();
             _initialSyncComplete = false;
+            _applyingRemoteCount = 0;
         }
 
         private void LogDebug(string message)

@@ -14,7 +14,7 @@ namespace Atlas
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
-        public const string PluginGUID = "com.atlas.valheim";
+        public const string PluginGUID = "com.slatyo.atlas";
         public const string PluginName = "Atlas";
         public const string PluginVersion = "1.0.0";
 

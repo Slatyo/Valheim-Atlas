@@ -156,7 +156,8 @@ namespace Atlas.Network
 
             if (Plugin.IsServer())
             {
-                // Broadcast directly to all clients
+                // Server: merge into storage and broadcast to clients
+                Plugin.ExplorationManager.MergeChunks(chunks);
                 BroadcastExplorationToClients(chunks, GetLocalPlayerId());
             }
             else
@@ -181,8 +182,8 @@ namespace Atlas.Network
 
             if (Plugin.IsServer())
             {
-                // Add locally and broadcast
-                Plugin.PinManager.AddSharedPin(pin, false);
+                // Add locally (with minimap apply) and broadcast to clients
+                Plugin.PinManager.AddSharedPin(pin, true);
                 BroadcastPinToClients(pin, PinAction.Added, GetLocalPlayerId());
             }
             else
@@ -206,8 +207,8 @@ namespace Atlas.Network
 
             if (Plugin.IsServer())
             {
-                // Remove locally and broadcast
-                Plugin.PinManager.RemoveSharedPin(pinId, false);
+                // Remove locally (with minimap apply) and broadcast to clients
+                Plugin.PinManager.RemoveSharedPin(pinId, true);
                 BroadcastPinRemovalToClients(pinId, GetLocalPlayerId());
             }
             else
@@ -231,8 +232,8 @@ namespace Atlas.Network
 
             if (Plugin.IsServer())
             {
-                // Update locally and broadcast
-                Plugin.PinManager.UpdateSharedPin(pin, false);
+                // Update locally (with minimap apply) and broadcast to clients
+                Plugin.PinManager.UpdateSharedPin(pin, true);
                 BroadcastPinToClients(pin, PinAction.Updated, GetLocalPlayerId());
             }
             else

@@ -218,18 +218,18 @@ namespace Atlas.Patches
         }
 
         /// <summary>
-        /// Patch for when Minimap is set up - good time to request sync
+        /// Patch for when Minimap is set up
+        /// Note: We don't request sync here as ZRoutedRpc may not be ready yet.
+        /// The sync request is handled in Game.SpawnPlayer_Postfix with a proper delay.
         /// </summary>
         [HarmonyPatch(nameof(Minimap.SetMapData))]
         [HarmonyPostfix]
         public static void SetMapData_Postfix(Minimap __instance)
         {
-            // This is called when the map is initialized with saved data
-            // Good opportunity to request full sync from server
+            // Just log - actual sync request happens in SpawnPlayer_Postfix
             if (Plugin.IsClient())
             {
-                Plugin.Log.LogInfo("Map data loaded, requesting full sync from server...");
-                Plugin.NetworkManager?.RequestFullSync();
+                Plugin.Log.LogDebug("Map data loaded, will request sync after player spawns...");
             }
         }
     }
